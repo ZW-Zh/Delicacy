@@ -34,15 +34,12 @@
     <style name="CardTitle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-
         <item name="android:textColor">#fff</item>
         <item name="android:textSize">28sp</item>
         <item name="android:fontFamily">sans-serif-light</item>
-
         <item name="android:gravity">bottom|left</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingBottom">8dp</item>
-
         <item name="android:focusable">true</item>
         <item name="android:background">?android:selectableItemBackground</item>
     </style>
@@ -51,6 +48,7 @@
         <item name="android:windowActionBarOverlay">false</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:toolbarStyle">@style/ToolbarTheme</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="toolbarNavigationButtonStyle">@style/myToolbarNavigationButtonStyle</item>
     <item name="android:windowTranslucentNavigation">true</item>
@@ -66,6 +64,6 @@
     <style name="myToolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="android:minWidth">0dp</item>
         <item name="android:padding">10dp</item>
-        <item name="android:scaleType">centerInside</item>
+        <item name="android:scaleType">fitStart</item>
     </style>
 </resources>

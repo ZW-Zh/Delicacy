@@ -162,6 +162,10 @@ public class DetailActivity extends AppCompatActivity {
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         favourite=getIntent().getBooleanExtra("favourite",false);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
+        TextView tbtitle= (TextView) findViewById(R.id.tbtitle);
+        Typeface typeFace = Typeface.createFromAsset(getAssets(),"fonts/songti.ttf");
+        tbtitle.setTypeface(typeFace);
+        tbtitle.setText("Delicacy");
         fab= (FloatingActionButton) findViewById(R.id.fab);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +178,7 @@ public class DetailActivity extends AppCompatActivity {
             new MyThread().start();
         }
     }
-    class MyThread extends Thread
+    private class MyThread extends Thread
     {
         @Override
         public void run() {
@@ -189,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                   fab.setBackgroundResource(R.drawable.ic_star_favourite);
+                   fab.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_star_favourite));
                 }
             });
         }
