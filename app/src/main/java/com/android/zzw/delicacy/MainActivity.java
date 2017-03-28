@@ -77,16 +77,9 @@ public class MainActivity extends AppCompatActivity {
         setRecyclerview();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
     private void iniFood(String location) {
         showFloatingButtonCircle();
-        foodList.clear();
+        //foodList.clear();
         adapter.notifyDataSetChanged();
         System.out.println("1");
         BmobQuery<picture> query = new BmobQuery<>();
@@ -100,14 +93,14 @@ public class MainActivity extends AppCompatActivity {
             public void done(final List<picture> list, BmobException e) {
                 if (e == null) {
                     for (picture food : list) {
-                        Food a = new Food(food.getPicName(),food.getIntroduction(),food.isFavourite(),food.getPicSrc().getUrl());
+                        Food a = new Food(food.getPicName(),food.getIntroduction(),food.isFavourite(),food.getPicSrc().getUrl(),food.getObjectId());
                         foodList.add(a);
                         adapter.notifyDataSetChanged();
                         fabProgressCircle.attachListener(new FABProgressListener() {
                             @Override
                             public void onFABProgressAnimationEnd() {
-                                Toasty.custom(MainActivity.this, list.size() + "个结果", null, Color.parseColor("#ffffff"),
-                                        Color.parseColor("#e16531"), Toast.LENGTH_SHORT, false, true).show();
+                                /*Toasty.custom(MainActivity.this, list.size() + "个结果", null, Color.parseColor("#ffffff"),
+                                        Color.parseColor("#e16531"), Toast.LENGTH_SHORT, false, true).show();*/
                                 list.clear();
                             }
                         });
@@ -118,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void showDialog() {
         final LocationPickerDialog locationPickerDialog = new LocationPickerDialog(this);
@@ -176,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("favourite", food.isFavourite());
                 intent.putExtra("detail", food.getIntroduction());
                 intent.putExtra("photo", 0);
+                intent.putExtra("id",food.getId());
                 ImageView foodimg = (ImageView) view.findViewById(R.id.foodimg);
                 sPhotoCache.put(0,
                         ((BitmapDrawable) foodimg.getDrawable()).getBitmap());
@@ -183,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                 ActivityOptions options =
                         ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, foodimg, "photo_hero");
-                startActivity(intent, options.toBundle());
+                startActivityForResult(intent,postion+1,options.toBundle());
             }
         });
     }
@@ -239,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
                 showDialog();
+                foodList.clear();
             }
         });
     }
@@ -272,4 +268,19 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==0) {
+            /*foodList.clear();
+            iniFood(location);
+            fabProgressCircle.onCompleteFABAnimationEnd();
+            adapter.notifyDataSetChanged();*/
+            foodList.get(requestCode-1).setFavourite(!foodList.get(requestCode-1).isFavourite());
+            adapter.notifyDataSetChanged();
+        }
+
+    }
 }
+

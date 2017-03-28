@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:id="@+id/tbtitle"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textColor="#ffffff"
                 />
 
@@ -82,7 +82,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="#ff9800"
+        app:backgroundTint="#ffc107"
         app:rippleColor="#f57c00"
         android:clickable="true"
         android:layout_margin="@dimen/fab_margin"

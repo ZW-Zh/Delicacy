@@ -31,7 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.zzw.delicacy.Adapter.TransitionAdapter;
+import com.android.zzw.delicacy.JavaBean.picture;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 import es.dmoral.toasty.Toasty;
 
 
@@ -43,16 +46,18 @@ public class DetailActivity extends AppCompatActivity {
     private TextView title;
     private TextView description;
     private boolean favourite;
+    private boolean savefavourite;
+    private int result;
     ImageView imageView;
     Toolbar toolbar;
-
+    String id;
     FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         setView();
-
+        choosefavourite();
         Bitmap photo = setupPhoto(getIntent().getIntExtra("photo",R.drawable.xiaren));
         colorize(photo);
         setupText();
@@ -100,17 +105,40 @@ public class DetailActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
+        if(favourite==savefavourite){
+            result=1;
+        }else {
+            result=0;
+        }
         ImageView hero = (ImageView) findViewById(R.id.photo);
         ObjectAnimator color = ObjectAnimator.ofArgb(hero.getDrawable(),"tint",
                 0, getResources().getColor(R.color.photo_tint));
         color.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+                setResult(result,getIntent());
                 finishAfterTransition();
             }
         });
         color.start();
         MainActivity.sPhotoCache.clear();
+        if(savefavourite!=favourite) {
+            picture food = new picture();
+            if (favourite) {
+                food.setFavourite(true);
+            } else {
+                food.setFavourite(false);
+            }
+            food.update(id, new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                    } else {
+                        Toasty.error(DetailActivity.this, "更新失败：" + e.getMessage() + "," + e.getErrorCode(), Toast.LENGTH_SHORT, true).show();
+                    }
+                }
+            });
+        }
     }
     private void applySystemWindowsBottomInset(int container) {
         View containerView = findViewById(container);
@@ -161,6 +189,8 @@ public class DetailActivity extends AppCompatActivity {
         imageView= (ImageView) findViewById(R.id.photo);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         favourite=getIntent().getBooleanExtra("favourite",false);
+        savefavourite=favourite;
+        id=getIntent().getStringExtra("id");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
         TextView tbtitle= (TextView) findViewById(R.id.tbtitle);
         Typeface typeFace = Typeface.createFromAsset(getAssets(),"fonts/songti.ttf");
@@ -173,29 +203,25 @@ public class DetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+    public void choosefavourite(){
         if(favourite){
-            //System.out.println("111");
-            new MyThread().start();
+            fab.setImageResource(R.drawable.ic_star_favourite);
         }
-    }
-    private class MyThread extends Thread
-    {
-        @Override
-        public void run() {
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    // TODO Auto-generated method stub
-                    try {
-                        //延迟两秒更新
-                        Thread.sleep(0);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                   fab.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_star_favourite));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favourite=!favourite;
+                if(favourite){
+                    fab.setImageResource(R.drawable.ic_star_favourite);
+                    Toasty.success(DetailActivity.this, "收藏成功", Toast.LENGTH_SHORT, true).show();
+                }else {
+                    fab.setImageResource(R.drawable.ic_star);
+                    Toasty.success(DetailActivity.this, "取消收藏", Toast.LENGTH_SHORT, true).show();
                 }
-            });
-        }
+
+            }
+        });
     }
+
 }

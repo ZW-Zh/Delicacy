@@ -9,12 +9,22 @@ public class Food {
     private String introduction;
     private boolean favourite;
     private String url;
+    private String id;
 
-    public Food(String name,String introduction,boolean favourite,String url){
+    public Food(String name,String introduction,boolean favourite,String url,String id){
         this.name=name;
         this.introduction=introduction;
         this.favourite=favourite;
         this.url=url;
+        this.id=id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setIntroduction(String introduction) {
