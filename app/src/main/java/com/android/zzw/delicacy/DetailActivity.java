@@ -189,6 +189,7 @@ public class DetailActivity extends AppCompatActivity {
         imageView= (ImageView) findViewById(R.id.photo);
         toolbar= (Toolbar) findViewById(R.id.toolbar);
         favourite=getIntent().getBooleanExtra("favourite",false);
+
         savefavourite=favourite;
         id=getIntent().getStringExtra("id");
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);

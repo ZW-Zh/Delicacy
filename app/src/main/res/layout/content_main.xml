@@ -8,11 +8,41 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.android.zzw.delicacy.MainActivity"
     tools:showIn="@layout/activity_main">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"
+            android:background="#ff9800"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题"
+            android:id="@+id/foodtitle"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            />
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/foodrecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true" />
+    </LinearLayout>
     <com.github.jorgecastilloprz.FABProgressCircle
         android:id="@+id/fabprogress"
         android:layout_width="wrap_content"

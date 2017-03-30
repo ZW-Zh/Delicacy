@@ -24,7 +24,7 @@ public class LocationPicker extends FrameLayout {
     private onLocationChangedListener mOnLocationChangedListener;
     String[] country= {"中国","法国","日本","西班牙","希腊","俄罗斯","意大利","韩国"};
     int count[]={6,1,1,1,1,1,1,1};
-    String[] chinaprovince = {"北京","上海","广州","四川","江苏","天津"};
+    String[] chinaprovince = {"北京 ","上海 ","广州 ","四川 ","江苏 ","天津 "};
     String[] France={" "},Spanish={" "},Greek={" "},Russia={" "},Italy={" "},Koera={" "},Japan={" "};
     String[] args=chinaprovince;
     public LocationPicker(Context context) {

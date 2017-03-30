@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView cache;
     private String location;
     private ActionBarDrawerToggle mDrawerToggle;
+    TextView foodtitle;
     FloatingActionButton fab;
     FoodAdapter adapter;
     Toolbar toolbar;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        foodtitle= (TextView) findViewById(R.id.foodtitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -81,11 +83,8 @@ public class MainActivity extends AppCompatActivity {
         showFloatingButtonCircle();
         //foodList.clear();
         adapter.notifyDataSetChanged();
-        System.out.println("1");
         BmobQuery<picture> query = new BmobQuery<>();
-        if(location.length()==3){
-            location=location.substring(0,location.length()-1);
-        }
+        location=location.substring(0,location.length()-1);
         query.addWhereEqualTo("location", location);
         query.setLimit(50);
         query.findObjects(new FindListener<picture>() {
@@ -119,13 +118,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void OnLocationTimeSet(String choose) {
                 if (choose == null) {
-                    location = "中国北京";
+                    location = "中国北京 ";
                     locationPickerDialog.dismiss();
-                    Toast.makeText(MainActivity.this, "中国 北京", Toast.LENGTH_SHORT).show();
+                    foodtitle.setText("中国北京");
                     iniFood(location);
                 } else {
                     location = choose;
-                    Toast.makeText(MainActivity.this, choose, Toast.LENGTH_SHORT).show();
+                    foodtitle.setText(choose);
                     locationPickerDialog.dismiss();
                     iniFood(location);
                 }
@@ -181,6 +180,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent,postion+1,options.toBundle());
             }
         });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    fab.hide();
+                    fabProgressCircle.setVisibility(View.INVISIBLE);
+                } else {
+                    fabProgressCircle.setVisibility(View.VISIBLE);
+                    fab.show();
+                }
+            }
+        });
+
     }
 
     public void setDrawerlayout() {
@@ -208,7 +221,34 @@ public class MainActivity extends AppCompatActivity {
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toasty.success(MainActivity.this,"diaj",Toast.LENGTH_SHORT).show();
+                foodList.clear();
+                mDrawerLayout.closeDrawers();
+                foodtitle.setText("我的最爱");
+                showFloatingButtonCircle();
+                adapter.notifyDataSetChanged();
+                BmobQuery<picture> query = new BmobQuery<>();
+                query.addWhereEqualTo("favourite", true);
+                query.setLimit(50);
+                query.findObjects(new FindListener<picture>() {
+                    @Override
+                    public void done(final List<picture> list, BmobException e) {
+                        if (e == null) {
+                            for (picture food : list) {
+                                Food a = new Food(food.getPicName(),food.getIntroduction(),food.isFavourite(),food.getPicSrc().getUrl(),food.getObjectId());
+                                foodList.add(a);
+                                adapter.notifyDataSetChanged();
+                                fabProgressCircle.attachListener(new FABProgressListener() {
+                                    @Override
+                                    public void onFABProgressAnimationEnd() {
+                                        list.clear();
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                        }
+                    }
+                });
             }
         });
         cleancache.setOnClickListener(new View.OnClickListener() {
